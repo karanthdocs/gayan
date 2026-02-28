@@ -3,7 +3,6 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  Prevent automatic page reloads
-// @author       -
 // @match        https://sarathi.parivahan.gov.in/sarathiservice/authenticationaction.do*
 // @grant        none
 // ==/UserScript==
@@ -11,18 +10,17 @@
 (function() {
     'use strict';
 
-    // Prevent the default action for the 'beforeunload' event
+   
     window.addEventListener('beforeunload', function(event) {
         event.preventDefault();
-        event.returnValue = ''; // Standard way to show a confirmation dialog
+        event.returnValue = ''; 
     });
 
-    // If there are specific elements triggering a reload, you can prevent their default actions too
-    // Example: Preventing form submissions
+   
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault(); 
             console.log('Form submission prevented.');
                     });
     });
