@@ -3,7 +3,6 @@
 // @namespace    http://tampermonkey.net/
 // @version      3.1.1
 // @description  Sends applimg as CapPho only when user clicks the custom button (for https://sarathi.parivahan.gov.in/sarathiservice/authenticationaction.do)
-// @author       You
 // @match        https://sarathi.parivahan.gov.in/sarathiservice/authenticationaction.do*
 // @run-at       document-end
 // @grant        none
@@ -12,7 +11,7 @@
 (function () {
     'use strict';
 
-    // Wait for DOM to load
+
     window.addEventListener('load', () => {
 
         // Custom button banana
@@ -32,11 +31,11 @@
         btn.title = "Click to send face auth data automatically";
         document.body.appendChild(btn);
 
-        // Button click hone pe main kaam
+      
         btn.addEventListener("click", async () => {
             console.log("🔄 Send button clicked — starting FaceAuth request...");
 
-            // Wait a bit if applimg not ready
+          
             if (typeof window.applimg === 'undefined' || !window.applimg) {
                 alert("⚠️ Image data (applimg) not found yet. Please ensure the page has fully loaded.");
                 return;
@@ -76,7 +75,7 @@
                 const json = await response.json();
                 console.log("✅ Server Response:", json);
 
-                // Webpage pe response show karna
+              
                 let old = document.getElementById("customResponseBox");
                 if (old) old.remove();
 
